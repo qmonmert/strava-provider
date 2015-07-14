@@ -1,0 +1,55 @@
+<jnt = 'http://www.jahia.org/jahia/nt/1.0'>
+<jmix = 'http://www.jahia.org/jahia/mix/1.0'>
+
+[jnt:tokenRequest] > jnt:content, jmix:structuredContent
+
+[jnt:movie] > jnt:content, jmix:structuredContent, mix:title
+ - overview (string) i18n
+ - tagline (string) i18n
+ - original_title (string)
+ - backdrop_path (string)
+ - poster_path (string) i18n
+ - homepage (string)
+ - release_date (date)
+ - status (string)
+ - runtime (long)
+ - spoken_languages (string) multiple
+ - adult (boolean)
+ - production_companies (string) multiple
+ - imdb_id (string)
+ - budget (long)
+ - revenue (double)
+ - vote_average (double)
+ - vote_count (long)
+ - popularity (double)
+ + * (jnt:cast)
+ + * (jnt:crew)
+
+[jnt:cast]
+ - person (weakreference)
+ - name (string)
+ - character (string)
+ - order (long)
+ - cast_id (long)
+ - profile (string)
+
+[jnt:crew]
+ - person (weakreference)
+ - name (string)
+ - job (string)
+ - department (string)
+ - profile (string)
+
+[jnt:moviesList] > jnt:content, jmix:list, jmix:structuredContent, mix:title
+ - poster_path (string)
+ + * (jnt:content)
+
+[jnt:moviePerson] > jnt:content, jmix:structuredContent
+ - name (string)
+ - biography (string)
+ - homepage (string)
+ - birthday (date)
+ - deathday (date)
+ - profile (string)
+
+[jnt:myMoviesList] > jnt:content, jmix:structuredContent, mix:title
