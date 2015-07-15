@@ -5,6 +5,7 @@
     * https://www.themoviedb.org/documentation/api
     * Example
         * Search : http://api.themoviedb.org/3/search/movie?query=spiderman&api_key=xxx
+        * Find : http://api.themoviedb.org/3/find/tt0100669?api_key=xxx&external_source=imdb_id
 
 2.  Components
 

@@ -53,3 +53,4 @@
  - profile (string)
 
 [jnt:myMoviesList] > jnt:content, jmix:structuredContent, mix:title
+

@@ -37,6 +37,8 @@ public class TMDBDataSource implements ExternalDataSource, ExternalDataSource.Se
     private static String API_SEARCH_MOVIE = "/3/search/movie";
     private static String API_KEY = "api_key";
 
+    private static String API_FIND = "/3/find/";
+
     private static Pattern YEAR_PATTERN = Pattern.compile("[0-9]{4,4}");
     private static Pattern DATE_PATTERN = Pattern.compile("[0-9]{4,4}/[0-9]{2,2}");
 
@@ -617,6 +619,11 @@ public class TMDBDataSource implements ExternalDataSource, ExternalDataSource.Se
 
                 if (m.containsKey("jcr.title")) { // TODO: updated : m.containsKey("jcr:title")
                     tmdbResult = queryTMDB(API_SEARCH_MOVIE, "query", m.get("jcr.title").getString()).getJSONArray("results"); // TODO: updated : m.get("jcr:title").getString()
+                }
+
+                // TODO: added
+                if (m.containsKey("imdb_id")) {
+                    tmdbResult = queryTMDB(API_FIND + m.get("imdb_id").getString(), "external_source", "imdb_id").getJSONArray("movie_results");
                 }
 
                 if (tmdbResult != null) {
