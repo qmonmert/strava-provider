@@ -20,6 +20,8 @@
 
 4.  Apply
 
+    * Complete the spring file : tmdb-provider.xml
+
     * Deploy the module tmdb-provider
 
     * themoviedb
