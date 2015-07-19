@@ -54,3 +54,13 @@
 
 [jnt:myMoviesList] > jnt:content, jmix:structuredContent, mix:title
 
+[jnt:stravaAccount] > jnt:content, jmix:structuredContent, mix:title
+- lastname (String)
+- firstname (String)
+- city (String)
+- state (String)
+- country (String)
+- sex (String)
+- email (String)
+- weight (String)
+

@@ -27,7 +27,25 @@
 
     <bean name="TMDBDataSource" class="org.jahia.modules.tmdbprovider.TMDBDataSource" init-method="start">
         <property name="cacheProvider" ref="ehCacheProvider"/>
-        <property name="apiKeyValue" value="${com.jahia.tmdb.apiKeyValue}"/>
+         <property name="apiKeyValue" value="${com.jahia.tmdb.apiKeyValue}"/>
+    </bean>
+
+    <!-- Strava -->
+
+    <bean id="StravaProvider" class="org.jahia.modules.external.ExternalContentStoreProvider" parent="AbstractJCRStoreProvider" >
+        <property name="key" value="StravaProvider"/>
+        <property name="mountPoint" value="/sites/ACMESPACE/contents/strava"/>
+        <property name="externalProviderInitializerService" ref="ExternalProviderInitializerService"/>
+        <property name="extendableTypes">
+            <list>
+                <value>nt:base</value>
+            </list>
+        </property>
+        <property name="dataSource" ref="StravaDataSource"/>
+    </bean>
+
+    <bean name="StravaDataSource" class="org.jahia.modules.strava.StravaDataSource" init-method="start">
+         <property name="apiKeyValue" value="${access_token}"/>
     </bean>
 
 </beans>
