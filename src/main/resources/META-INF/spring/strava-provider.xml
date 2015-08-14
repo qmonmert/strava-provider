@@ -8,33 +8,11 @@
 
     <osgi:reference id="ExternalProviderInitializerService" interface="org.jahia.modules.external.ExternalProviderInitializerService"/>
 
-    <bean class="org.jahia.modules.tmdbprovider.TMDBTokenAction">
-        <property name="name" value="tmdbtoken"/>
-        <property name="datasource" ref="TMDBDataSource"/>
-    </bean>
-
-    <bean id="TMDBProvider" class="org.jahia.modules.external.ExternalContentStoreProvider" parent="AbstractJCRStoreProvider" >
-        <property name="key" value="TMDBProvider"/>
-        <property name="mountPoint" value="/sites/ACMESPACE/contents/tmdb"/>
-        <property name="externalProviderInitializerService" ref="ExternalProviderInitializerService"/>
-        <property name="extendableTypes">
-            <list>
-                <value>nt:base</value>
-            </list>
-        </property>
-        <property name="dataSource" ref="TMDBDataSource"/>
-    </bean>
-
-    <bean name="TMDBDataSource" class="org.jahia.modules.tmdbprovider.TMDBDataSource" init-method="start">
-        <property name="cacheProvider" ref="ehCacheProvider"/>
-         <property name="apiKeyValue" value="${com.jahia.tmdb.apiKeyValue}"/>
-    </bean>
-
     <!-- Strava -->
 
     <bean id="StravaProvider" class="org.jahia.modules.external.ExternalContentStoreProvider" parent="AbstractJCRStoreProvider" >
         <property name="key" value="StravaProvider"/>
-        <property name="mountPoint" value="/sites/ACMESPACE/contents/strava"/>
+        <property name="mountPoint" value="/sites/strava-site/contents/strava"/>
         <property name="externalProviderInitializerService" ref="ExternalProviderInitializerService"/>
         <property name="extendableTypes">
             <list>
@@ -45,7 +23,8 @@
     </bean>
 
     <bean name="StravaDataSource" class="org.jahia.modules.strava.StravaDataSource" init-method="start">
-         <property name="apiKeyValue" value="${access_token}"/>
+        <property name="cacheProvider" ref="ehCacheProvider"/>
+        <property name="apiKeyValue" value="${access_token}"/>
     </bean>
 
 </beans>
