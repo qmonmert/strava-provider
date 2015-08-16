@@ -1,7 +1,7 @@
 <jnt = 'http://www.jahia.org/jahia/nt/1.0'>
 <jmix = 'http://www.jahia.org/jahia/mix/1.0'>
 
-[jnt:stravaAccount] > jnt:content, jmix:structuredContent, mix:title
+[jnt:stravaAccount] > jnt:content
 - lastname (String)
 - firstname (String)
 - city (String)
@@ -11,5 +11,5 @@
 - email (String)
 - weight (String)
 
-[jnt:athlete] > jnt:content, jmix:structuredContent, mix:title
+[jnt:athlete] > jnt:content, jmix:structuredContent
 
