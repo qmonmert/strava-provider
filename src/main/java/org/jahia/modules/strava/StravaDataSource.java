@@ -47,7 +47,21 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
     private Ehcache cache;
     private static final String CACHE_NAME = "strava-cache";
     private static final String CACHE_STRAVA_ACCOUNT  = "cacheStravaAccount";
+    
+    // Properties : strava
+    public static final String ID = "id";
+    public static final String LASTNAME = "lastname";
+    public static final String FIRSTNAME = "firstname";
+    public static final String CITY = "city";
+    public static final String STATE = "state";
+    public static final String COUNTRY = "country";
+    public static final String SEX = "sex";
+    public static final String EMAIL = "email";
+    public static final String WEIGHT = "weight";
 
+    // Properties : JCR
+    public static final String ROOT = "root";
+    
     // CONSTRUCTOR
 
     public StravaDataSource() {
@@ -94,7 +108,7 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
     }
 
     private String getPathForStravaAccount(JSONObject stravaAccount) throws JSONException {
-        return "/" + stravaAccount.getString("id");
+        return "/" + stravaAccount.getString(ID);
     }
 
     private JSONObject getCacheStravaAccount() throws RepositoryException {
@@ -107,32 +121,31 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
         return stravaAccount;
     }
 
-    // OVERRIDE : ExternalDataSource
+    // IMPLEMENTS : ExternalDataSource
 
-    @Override
     public ExternalData getItemByIdentifier(String identifier) throws ItemNotFoundException {
         try {
-            if (identifier.equals("root")) {
-                return new ExternalData(identifier, "/", "jnt:contentFolder", new HashMap<String, String[]>());
+            if (identifier.equals(ROOT)) {
+                return new ExternalData(identifier, "/", JNT_CONTENT_FOLDER, new HashMap<String, String[]>());
             }
             JSONObject stravaAccount = getCacheStravaAccount();
             Map<String, String[]> properties = new HashMap<String, String[]>();
-            if (stravaAccount.getString("lastname") != null)
-                properties.put("lastname", new String[]{stravaAccount.getString("lastname")});
-            if (stravaAccount.getString("firstname") != null)
-                properties.put("firstname", new String[]{stravaAccount.getString("firstname")});
-            if (stravaAccount.getString("city") != null)
-                properties.put("city", new String[]{stravaAccount.getString("city")});
-            if (stravaAccount.getString("state") != null)
-                properties.put("state", new String[]{stravaAccount.getString("state")});
-            if (stravaAccount.getString("country") != null)
-                properties.put("country", new String[]{stravaAccount.getString("country")});
-            if (stravaAccount.getString("sex") != null)
-                properties.put("sex", new String[]{stravaAccount.getString("sex")});
-            if (stravaAccount.getString("email") != null)
-                properties.put("email", new String[]{stravaAccount.getString("email")});
-            if (stravaAccount.getString("weight") != null)
-                properties.put("weight", new String[]{stravaAccount.getString("weight")});
+            if (stravaAccount.getString(LASTNAME) != null)
+                properties.put(LASTNAME, new String[]{stravaAccount.getString(LASTNAME)});
+            if (stravaAccount.getString(FIRSTNAME) != null)
+                properties.put(FIRSTNAME, new String[]{stravaAccount.getString(FIRSTNAME)});
+            if (stravaAccount.getString(CITY) != null)
+                properties.put(CITY, new String[]{stravaAccount.getString(CITY)});
+            if (stravaAccount.getString(STATE) != null)
+                properties.put(STATE, new String[]{stravaAccount.getString(STATE)});
+            if (stravaAccount.getString(COUNTRY) != null)
+                properties.put(COUNTRY, new String[]{stravaAccount.getString(COUNTRY)});
+            if (stravaAccount.getString(SEX) != null)
+                properties.put(SEX, new String[]{stravaAccount.getString(SEX)});
+            if (stravaAccount.getString(EMAIL) != null)
+                properties.put(EMAIL, new String[]{stravaAccount.getString(EMAIL)});
+            if (stravaAccount.getString(WEIGHT) != null)
+                properties.put(WEIGHT, new String[]{stravaAccount.getString(WEIGHT)});
             ExternalData data = new ExternalData(identifier, "/" + identifier, JNT_STRAVA_ACCOUNT, properties);
             return data;
         } catch (Exception e) {
@@ -140,12 +153,11 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
         }
     }
 
-    @Override
     public ExternalData getItemByPath(String path) throws PathNotFoundException {
         String[] splitPath = path.split("/");
         try {
             if (splitPath.length <= 1) {
-                return getItemByIdentifier("root");
+                return getItemByIdentifier(ROOT);
             } else {
                 return getItemByIdentifier(splitPath[1]);
             }
@@ -154,15 +166,12 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
         }
     }
 
-    // OVERRIDE : ExternalDataSource
-
-    @Override
     public List<String> getChildren(String path) throws RepositoryException {
         List<String> r = new ArrayList<String>();
         if (path.equals("/")) {
             try {
                 JSONObject stravaAccount = getCacheStravaAccount();
-                String pathChild = stravaAccount.getString("id");
+                String pathChild = stravaAccount.getString(ID);
                 r.add(pathChild);
             } catch (JSONException e) {
                 throw new RepositoryException(e);
@@ -171,29 +180,24 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
         return r;
     }
 
-    @Override
     public Set<String> getSupportedNodeTypes() {
         return Sets.newHashSet(JNT_CONTENT_FOLDER, JNT_STRAVA_ACCOUNT);
     }
 
-    @Override
     public boolean isSupportsHierarchicalIdentifiers() {
         return false;
     }
 
-    @Override
     public boolean isSupportsUuid() {
         return false;
     }
 
-    @Override
     public boolean itemExists(String path) {
         return false;
     }
 
-    // OVERRIDE : ExternalDataSource.Searchable
+    // Implements : ExternalDataSource.Searchable
 
-    @Override
     public List<String> search(ExternalQuery query) throws RepositoryException {
         List<String> results = new ArrayList<String>();
         String nodeType = QueryHelper.getNodeType(query.getSource());

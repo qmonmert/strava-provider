@@ -16,7 +16,8 @@
         <property name="externalProviderInitializerService" ref="ExternalProviderInitializerService"/>
         <property name="extendableTypes">
             <list>
-                <value>nt:base</value>
+                <value>jnt:contentFolder</value>
+                <value>jnt:stravaAccount</value>
             </list>
         </property>
         <property name="dataSource" ref="StravaDataSource"/>
