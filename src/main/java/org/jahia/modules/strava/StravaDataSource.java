@@ -13,6 +13,7 @@ import org.jahia.modules.external.ExternalQuery;
 import org.jahia.modules.external.query.QueryHelper;
 import org.jahia.services.cache.ehcache.EhCacheProvider;
 import org.jahia.services.content.nodetypes.NodeTypeRegistry;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,12 +29,13 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
 
     // Strava API
     private static final String API_V3_ATHLETE = "/api/v3/athlete";
-    private static final String ACCES_TOKEN = "access_token";
-    private static final String URL_STRAVA = "www.strava.com";
-    private static final Integer PORT_STRAVA = 443;
+    private static final String ACCES_TOKEN    = "access_token";
+    private static final String URL_STRAVA     = "www.strava.com";
+    private static final Integer PORT_STRAVA   = 443;
 
     // Node types
     private static final String JNT_STRAVA_ACCOUNT = "jnt:stravaAccount";
+    private static final String JNT_STRAVA_SHOES   = "jnt:stravaShoes";
     private static final String JNT_CONTENT_FOLDER = "jnt:contentFolder";
 
     // Strava key account
@@ -45,22 +47,25 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
     // Cache
     private EhCacheProvider ehCacheProvider;
     private Ehcache cache;
-    private static final String CACHE_NAME = "strava-cache";
+    private static final String CACHE_NAME            = "strava-cache";
     private static final String CACHE_STRAVA_ACCOUNT  = "cacheStravaAccount";
     
     // Properties : strava
-    public static final String ID = "id";
-    public static final String LASTNAME = "lastname";
+    public static final String ID        = "id";
+    public static final String LASTNAME  = "lastname";
     public static final String FIRSTNAME = "firstname";
-    public static final String CITY = "city";
-    public static final String STATE = "state";
-    public static final String COUNTRY = "country";
-    public static final String SEX = "sex";
-    public static final String EMAIL = "email";
-    public static final String WEIGHT = "weight";
+    public static final String CITY      = "city";
+    public static final String STATE     = "state";
+    public static final String COUNTRY   = "country";
+    public static final String SEX       = "sex";
+    public static final String EMAIL     = "email";
+    public static final String WEIGHT    = "weight";
+    public static final String NAME      = "name";
+    public static final String DISTANCE  = "distance";
 
     // Properties : JCR
-    public static final String ROOT = "root";
+    private static final String ROOT  = "root";
+    private static final String SHOES = "shoes";
     
     // CONSTRUCTOR
 
@@ -130,6 +135,17 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
             }
             JSONObject stravaAccount = getCacheStravaAccount();
             Map<String, String[]> properties = new HashMap<String, String[]>();
+            // Add all shoes
+            if (identifier.contains("shoes")) {
+                String[] splitIdentifier = identifier.split("-");
+                JSONArray shoes = stravaAccount.getJSONArray(SHOES);
+                JSONObject s = (JSONObject) shoes.get(Integer.parseInt(splitIdentifier[1]) - 1);
+                properties.put(NAME, new String[]{s.getString(NAME)});
+                properties.put(DISTANCE, new String[]{s.getString(DISTANCE)});
+                ExternalData data = new ExternalData(identifier, "/" + identifier, JNT_STRAVA_SHOES, properties);
+                return data;
+            }
+            // Add the strava account
             if (stravaAccount.getString(LASTNAME) != null)
                 properties.put(LASTNAME, new String[]{stravaAccount.getString(LASTNAME)});
             if (stravaAccount.getString(FIRSTNAME) != null)
@@ -173,6 +189,10 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
                 JSONObject stravaAccount = getCacheStravaAccount();
                 String pathChild = stravaAccount.getString(ID);
                 r.add(pathChild);
+                JSONArray shoes = stravaAccount.getJSONArray(SHOES);
+                for (int i = 1; i <= shoes.length(); i++) {
+                    r.add(SHOES + "-" + i);
+                }
             } catch (JSONException e) {
                 throw new RepositoryException(e);
             }
@@ -181,7 +201,7 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
     }
 
     public Set<String> getSupportedNodeTypes() {
-        return Sets.newHashSet(JNT_CONTENT_FOLDER, JNT_STRAVA_ACCOUNT);
+        return Sets.newHashSet(JNT_CONTENT_FOLDER, JNT_STRAVA_ACCOUNT, JNT_STRAVA_SHOES);
     }
 
     public boolean isSupportsHierarchicalIdentifiers() {
@@ -202,10 +222,15 @@ public class StravaDataSource implements ExternalDataSource, ExternalDataSource.
         List<String> results = new ArrayList<String>();
         String nodeType = QueryHelper.getNodeType(query.getSource());
         try {
+            JSONObject stravaAccount = getCacheStravaAccount();
             if (NodeTypeRegistry.getInstance().getNodeType(JNT_STRAVA_ACCOUNT).isNodeType(nodeType)) {
-                JSONObject stravaAccount = getCacheStravaAccount();
                 String path = getPathForStravaAccount(stravaAccount);
                 results.add(path);
+            } else if (NodeTypeRegistry.getInstance().getNodeType(JNT_STRAVA_SHOES).isNodeType(nodeType)) {
+                JSONArray shoes = stravaAccount.getJSONArray(SHOES);
+                for (int i = 1; i <= shoes.length(); i++) {
+                    results.add("/" + SHOES + "-" + i);
+                }
             }
         } catch (JSONException e) {
             throw new RepositoryException(e);

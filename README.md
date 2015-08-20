@@ -18,11 +18,12 @@
     * Edit Mode Jahia
         * Create a new page in the site
         * Add a component named 'athlete' in this page
+        * Add a component named 'myShoes' in this page
         * Look the result
 
 3.  JCR
 
     * Go to http://localhost:8080/modules/tools/jcrQuery.jsp
-    * Query :
-        * JCR-SQL2
+    * Query JCR-SQL2 :
         * SELECT * FROM [jnt:stravaAccount]
+        * select * from [jnt:stravaShoes]

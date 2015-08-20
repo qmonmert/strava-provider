@@ -18,6 +18,7 @@
             <list>
                 <value>jnt:contentFolder</value>
                 <value>jnt:stravaAccount</value>
+                <value>jnt:stravaShoes</value>
             </list>
         </property>
         <property name="dataSource" ref="StravaDataSource"/>

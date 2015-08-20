@@ -11,5 +11,10 @@
 - email (String)
 - weight (String)
 
+[jnt:stravaShoes] > jnt:content
+- name (String)
+- distance (String)
+
 [jnt:athlete] > jnt:content, jmix:structuredContent
 
+[jnt:myShoes] > jnt:content, jmix:structuredContent
