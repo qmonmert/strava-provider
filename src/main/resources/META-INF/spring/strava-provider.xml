@@ -26,7 +26,8 @@
 
     <bean name="StravaDataSource" class="org.jahia.modules.strava.StravaDataSource" init-method="start">
         <property name="cacheProvider" ref="ehCacheProvider"/>
-        <property name="apiKeyValue" value="${access_token}"/>
+        <!--<property name="apiKeyValue" value="${access_token}"/>-->
+        <property name="apiKeyValue" value="7352ab3baeb484779ced1f9a35c03bcd4340a403"/>
     </bean>
 
 </beans>
